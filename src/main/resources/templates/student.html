@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRUD! 😛</title>
-    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <div class="container">
@@ -14,24 +14,24 @@
         <div class="editor">
           <div class="input-box">
             <label>학생 이름 : </label>
-            <input type="text" placeholder=" 이름을 입력하세요..." />
+            <input id="i_studentName" type="text" placeholder=" 이름을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>학생 나이 : </label>
-            <input type="number" placeholder=" 나이를 입력하세요..." />
+            <input id="i_studentAge" type="number" placeholder=" 나이를 입력하세요..." />
           </div>
           <div class="input-box">
             <label>연락처 : </label>
-            <input type="number" placeholder=" - 를 제거하고 입력하세요." />
+            <input id="i_studentPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
           </div>
           <div class="input-box">
             <label>주소 </label>
-            <input type="text" placeholder=" 주소를 입력하세요..." />
+            <input id="i_adress" type="text" placeholder=" 주소를 입력하세요..." />
             <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
           </div>
           <div class="btn-area">
             <a href="#" class="btn-cancel" onclick="">등록 취소</a>
-            <a href="#" class="btn-success" onclick="">학생 등록</a>
+            <a href="#" class="btn-success" onclick="addStudent()">학생 등록</a>
           </div>
         </div>
       </div>
@@ -43,23 +43,23 @@
           </div>
           <div class="input-box">
             <label>학생 번호 : </label>
-            <input type="number" value="7899" readonly />
+            <input id="uCurriculumNum" type="number" readonly />
           </div>
           <div class="input-box">
             <label>학생 이름 : </label>
-            <input type="text" value="현상원" />
+            <input id="uCurriculumName" type="text" />
           </div>
           <div class="input-box">
             <label>학생 나이 : </label>
-            <input type="number" value="88" placeholder=" 나이를 입력하세요..." />
+            <input id="uCurriculumAge" type="number" placeholder=" 나이를 입력하세요..." />
           </div>
           <div class="input-box">
             <label>연락처 : </label>
-            <input type="number" value="010-4097-****" placeholder=" - 를 제거하고 입력하세요." />
+            <input id="uCurriculumPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
           </div>
           <div class="input-box">
             <label>주소 </label>
-            <input type="text" value="대전 선화동 방산빌딩 지하 53층" placeholder=" 주소를 입력하세요..." />
+            <input id="uCurriculumAddress" type="text" placeholder=" 주소를 입력하세요..." />
             <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
           </div>
           <div class="btn-area">
@@ -77,13 +77,13 @@
             </a>
           </li>
           <li>
-            <a href="./index.html">
+            <a href="./student">
               <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
               <span class="title">학생 목록</span>
             </a>
           </li>
           <li>
-            <a href="./dept.html">
+            <a href="./curriculum">
               <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
               <span class="title">과정 목록</span>
             </a>
@@ -103,7 +103,7 @@
       <div class="cardBox">
         <div class="card">
           <div>
-            <div id="studentsCnt" class="numbers">2</div>
+            <div id="studentsCnt" class="numbers"></div>
             <div class="cardName">학생 수</div>
           </div>
           <div class="iconBx">
@@ -112,7 +112,7 @@
         </div>
         <div class="card">
           <div>
-            <div id="boardCnt" class="numbers">27.6</div>
+            <div id="boardCnt" class="numbers"></div>
             <div class="cardName">학생 평균나이</div>
           </div>
           <div class="iconBx">
@@ -128,7 +128,7 @@
             <!-- <a href="#" class="btn" style="background-color: #19ce60" onclick="downloadExcelFile()">엑셀 다운로드</a> -->
             <a href="#" id="empAdd" class="btn">학생 추가</a>
           </div>
-          <table>
+          <table id="student">
             <thead>
               <tr>
                 <th>학생 번호</th>
@@ -140,7 +140,7 @@
               </tr>
             </thead>
             <tbody id="data">
-              <tr onclick="getData()">
+              <!-- <tr onclick="getData()">
                 <td>6500</td>
                 <td>현상원</td>
                 <td>55</td>
@@ -155,7 +155,7 @@
                 <td>010-3371-****</td>
                 <td>서울 강남구 테헤란로 521</td>
                 <td>React 과정</td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
           <!-- 페이징 처리하는 HTML -->
@@ -205,7 +205,105 @@
     });
     function getData() {
       $('.update-popup').css('display', 'block');
+      $.ajax({
+        url: '/api/v1/student/' + studentNum,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+          $('#uCurriculumNum').val(response.curriculumNum);
+          $('#uCurriculumName').val(response.curriculumName);
+          $('#uCurriculumRoom').val(response.curriculumRoom);
+          $('#uCurriculumStartPeriod').val(response.curriculumStartPeriod);
+          $('#uCurriculumEndPeriod').val(response.curriculumEndPeriod);
+          $('#uCurriculumTeacher').val(response.curriculumTeacher);
+        },
+      });
     }
+    // 학생목록 불러오기
+    function doSubmit() {
+      studentsCnt = 0;
+      boardCnt = 0;
+      $.ajax({
+        url: 'api/v1/student',
+        contentType: 'application/json', //서버에 json타입으로 보낼 예정(요청)
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+          console.log(response);
+          var tbody = '';
+          for (var i in response) {
+            tbody +=
+              "<tr onclick='getData(" +
+              response[i].studentNum +
+              ")'><td>" +
+              response[i].studentNum +
+              '</td><td>' +
+              response[i].studentName +
+              '</td><td>' +
+              response[i].studentAge +
+              '</td><td>' +
+              response[i].studentPhone +
+              '</td><td>' +
+              response[i].address +
+              '</td><td>' +
+              response[i].curriculum.curriculumName +
+              '</td></tr>';
+            studentsCnt += 1;
+            boardCnt += response[i].studentAge;
+          }
+          boardCnt = boardCnt / studentsCnt;
+          $('#data').append(tbody);
+          $('#studentsCnt').append(studentsCnt);
+          $('#boardCnt').append(boardCnt);
+        },
+      });
+    }
+    doSubmit();
+
+    // 학생추가
+    function addStudent() {
+      var studentName = $('#i_studentName').val();
+      var studentAge = $('#i_studentAge').val();
+      var studentPhone = $('#i_studentPhone').val();
+      var address = $('#i_adress').val();
+
+      var jsonData = {
+        studentName: studentName,
+        studentAge: studentAge,
+        studentPhone: studentPhone,
+        address: address,
+      };
+
+      //AJAX 호출!
+      $.ajax({
+        url: '/api/v1/student',
+        type: 'POST',
+        contentType: 'application/json', // 서버에 json 타입으로 보낼 예정(요청)
+        data: JSON.stringify(jsonData),
+        dataType: 'json',
+        success: function (response) {
+          console.log(response);
+          alert('학생 추가 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
+
+    // //학생 상세조회
+    // function getData(studentNum) {
+    //   $.ajax({
+    //     url: '/api/v1/student/' + studentNum,
+    //     type: 'GET',
+    //     dataType: 'json',
+    //     success: function (response) {
+    //       $('#studentNum').val(response.studentNum);
+    //       $('#studentName').val(response.studentName);
+    //       $('#studentAge').val(response.studentAge);
+    //       $('#studentPhone').val(response.studentPhone);
+    //       $('#address').val(response.address);
+    //     },
+    //   });
+    // }
 
     //도로명 주소 함수
     function getPostCode() {

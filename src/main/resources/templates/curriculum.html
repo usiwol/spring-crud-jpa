@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD! 😛</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- 부서 추가 팝업 -->
+      <div class="write-popup">
+        <div class="editor">
+          <div class="input-box">
+            <label>과정 번호 : </label>
+            <input id="i_curriculumNum" type="number" placeholder="과정번호를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 명 : </label>
+            <input id="i_curriculumName" type="text" placeholder="과정명을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 호실 : </label>
+            <input id="i_curriculumRoom" type="text" placeholder="과정호실을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 기간 : </label>
+            <input id="i_curriculumStartPeriod" type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
+            <input id="i_curriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+          </div>
+          <div class="input-box">
+            <label>담당 교사 : </label>
+            <input id="i_curriculumTeacher" type="text" placeholder="교사이름 입력하세요..." />
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-cancel" onclick="">취소</a>
+            <a href="#" class="btn-success" onclick="addCurriculum()">등록</a>
+          </div>
+        </div>
+      </div>
+      <!-- 부서 수정 -->
+      <div class="update-popup">
+        <div class="editor">
+          <div class="close">
+            <a href="#" class="btn-close">닫기</a>
+          </div>
+          <div class="input-box">
+            <label>과정 번호 : </label>
+            <input id="u_curriculumNum" type="number" value="9983" placeholder="과정번호를 입력하세요..." readonly />
+          </div>
+          <div class="input-box">
+            <label>과정 명 : </label>
+            <input id="u_curriculumName" type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." readonly />
+          </div>
+          <div class="input-box">
+            <label>과정 호실 : </label>
+            <input id="u_curriculumRoom" type="text" value="501호" placeholder="과정호실을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 기간 : </label>
+            <input id="u_curriculumStartPeriod" type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
+            <input id="u_curriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+          </div>
+          <div class="input-box">
+            <label>담당 교사 : </label>
+            <input id="u_curriculumTeacher" type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-update" onclick="doUpdate()">수정</a>
+            <a href="#" class="btn-delete" onclick="doDelete()">삭제</a>
+          </div>
+        </div>
+      </div>
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="logo-apple"></ion-icon></span>
+              <span class="title">DW ADMIN</span>
+            </a>
+          </li>
+          <li>
+            <a href="./index.html">
+              <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              <span class="title">학생 목록</span>
+            </a>
+          </li>
+          <li>
+            <a href="./dept.html">
+              <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+              <span class="title">과정 목록</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              <span class="title">Sign Out</span>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- main -->
+    <div class="main">
+      <!-- table -->
+      <div class="details">
+        <div class="recentOrders">
+          <div class="cardHeader">
+            <h2>과정 목록</h2>
+            <a href="#" onclick="addSubject()" class="btn">과정 추가</a>
+          </div>
+          <table id="curriculum">
+            <thead>
+              <tr>
+                <th>과정 번호</th>
+                <th>과정 이름</th>
+                <th>과정 호실</th>
+                <th>과정 기간</th>
+                <th>담당 교사</th>
+              </tr>
+            </thead>
+            <tbody id="data">
+              <!-- <tr onclick="getSubject()">
+                <td>18990</td>
+                <td>주짓수 개발자 양성 과정</td>
+                <td>501호</td>
+                <td>22.06.15 ~ 22.12.22</td>
+                <td>이정수</td>
+              </tr>
+              <tr onclick="getSubject()">
+                <td>18330</td>
+                <td>React.js 개발자 양성 과정</td>
+                <td>502호</td>
+                <td>22.12.07 ~ 23.05.01</td>
+                <td>이예진</td>
+              </tr> -->
+            </tbody>
+          </table>
+          <!-- 페이징 처리하는 HTML -->
+          <div class="pagination">
+            <a>Previous</a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>4</a>
+            <a>5</a>
+            <a>Next</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!-- Icon CDN -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- Jquery CDN -->
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    $('.btn-cancel').click(function () {
+      $('.write-popup').css('display', 'none');
+    });
+    $('.btn-close').click(function () {
+      $('.update-popup').css('display', 'none');
+    });
+    let list = document.querySelectorAll('.navigation li');
+    function activeLink() {
+      list.forEach((item) => {
+        item.classList.remove('hovered');
+      });
+      this.classList.add('hovered');
+    }
+    list.forEach((item) => {
+      item.addEventListener('mouseover', activeLink);
+    });
+    // 상세조회
+    function getSubject(curriculumNum) {
+      $('.update-popup').css('display', 'block');
+      $.ajax({
+        url: '/api/v1/curriculum/' + curriculumNum,
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+          $('#u_curriculumNum').val(response.curriculumNum);
+          $('#u_curriculumName').val(response.curriculumName);
+          $('#u_curriculumRoom').val(response.curriculumRoom);
+          $('#u_curriculumStartPeriod').val(response.curriculumStartPeriod);
+          $('#u_curriculumEndPeriod').val(response.curriculumEndPeriod);
+          $('#u_curriculumTeacher').val(response.curriculumTeacher);
+        },
+      });
+    }
+
+    function addSubject() {
+      $('.write-popup').css('display', 'block');
+    }
+
+    // 과정목록 불러오기
+    doSubject();
+    function doSubject() {
+      $.ajax({
+        url: 'api/v1/curriculum',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+          var html = '';
+          for (var i = 0; i < response.length; i++) {
+            html +=
+              '<tr onclick="getSubject(' +
+              response[i].curriculumNum +
+              ')"><td>' +
+              response[i].curriculumNum +
+              '</td><td>' +
+              response[i].curriculumName +
+              '</td><td>' +
+              response[i].curriculumRoom +
+              '</td><td>' +
+              response[i].curriculumStartPeriod.replace(/-/g, '.').substr(2, 8) +
+              '~' +
+              response[i].curriculumEndPeriod.replace(/-/g, '.').substr(2, 8) +
+              '</td><td>' +
+              response[i].curriculumTeacher +
+              '</td></tr>';
+          }
+          $('#curriculum').append(html);
+        },
+      });
+    }
+
+    //과정 추가
+    function addCurriculum() {
+      var number = $('#i_curriculumNum').val();
+      var name = $('#i_curriculumName').val();
+      var room = $('#i_curriculumRoom').val();
+      var startPeriod = $('#i_curriculumStartPeriod').val();
+      var endPeriod = $('#i_curriculumEndPeriod').val();
+      var teacher = $('#i_curriculumTeacher').val();
+
+      var jsonData = {
+        curriculumNum: number,
+        curriculumName: name,
+        curriculumRoom: room,
+        curriculumStartPeriod: startPeriod,
+        curriculumEndPeriod: endPeriod,
+        curriculumTeacher: teacher,
+      };
+
+      //AJAX 호출!
+      $.ajax({
+        url: '/api/v1/curriculum',
+        type: 'POST',
+        contentType: 'application/json', // 서버에 json 타입으로 보낼 예정(요청)
+        data: JSON.stringify(jsonData),
+        dataType: 'json',
+        success: function (response) {
+          console.log(response);
+          alert('과정 추가 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
+
+    //수정
+    //UPDATE == INSERT
+    function doUpdate() {
+      var number = $('#u_curriculumNum').val();
+      var name = $('#u_curriculumName').val();
+      var room = $('#u_curriculumRoom').val();
+      var startPeriod = $('#u_curriculumStartPeriod').val();
+      var endPeriod = $('#u_curriculumEndPeriod').val();
+      var teacher = $('#u_curriculumTeacher').val();
+
+      var jsonData = {
+        curriculumNum: number,
+        curriculumName: name,
+        curriculumRoom: room,
+        curriculumStartPeriod: startPeriod,
+        curriculumEndPeriod: endPeriod,
+        curriculumTeacher: teacher,
+      };
+
+      $.ajax({
+        url: '/api/v1/curriculum',
+        type: 'PATCH',
+        contentType: 'application/json', //서버에 json 타입으로 보낼 예정(요청)
+        data: JSON.stringify(jsonData),
+        dataType: 'json',
+        success: function (response) {
+          alert('과정 수정 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
+
+    //과정삭제
+    function doDelete() {
+      var num = $('#u_curriculumNum').val(); //input 데이터 가져오기
+
+      //사원 삭제 ajax 연결하기
+      $.ajax({
+        url: '/api/v1/curriculum/' + num,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function (response) {
+          alert('과정 삭제 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
+  </script>
+</html>

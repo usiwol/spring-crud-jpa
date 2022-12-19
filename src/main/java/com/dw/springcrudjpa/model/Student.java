@@ -22,18 +22,18 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private int studentNum; //학생번호(pk)
+    private long studentNum; //학생번호(pk)
     @Column(length = 30)
     private String studentName; //학생이름
     @Column
     private int studentAge; //학생나이
     @Column
-    private String studentPhone; //학생연락처
+    private int studentPhone; //학생연락처
     @Column
     private String address; //주소
 
     // @JoinColumn => member테이블에 dept_id라는 컬럼(FK)생성
 	@ManyToOne
-	@JoinColumn(name = "curriculum_num")
-	private Curriculum crud_curriculum;
+	@JoinColumn(name = "curriculumNum")
+	private Curriculum curriculum;
 }
