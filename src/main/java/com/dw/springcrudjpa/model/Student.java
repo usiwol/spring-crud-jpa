@@ -28,7 +28,7 @@ public class Student {
     @Column
     private int studentAge; //학생나이
     @Column
-    private int studentPhone; //학생연락처
+    private String studentPhone; //학생연락처
     @Column
     private String address; //주소
 

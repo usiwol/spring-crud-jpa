@@ -322,6 +322,20 @@ body {
   border: solid 2px #1e90ff;
   border-radius: 5px;
 }
+.input-box .selectCurriculumName {
+  border: solid 2px #1e90ff;
+  border-radius: 5px;
+  padding: 1%;
+  font-size: 18px;
+  width: 70%;
+}
+.input-box .selectCurriculumName textarea {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  border: solid 2px #1e90ff;
+  border-radius: 5px;
+}
 
 .btn-area {
   text-align: center;

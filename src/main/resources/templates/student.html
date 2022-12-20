@@ -14,23 +14,29 @@
         <div class="editor">
           <div class="input-box">
             <label>학생 이름 : </label>
-            <input id="i_studentName" type="text" placeholder=" 이름을 입력하세요..." />
+            <input id="insertStudentName" type="text" placeholder=" 이름을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>학생 나이 : </label>
-            <input id="i_studentAge" type="number" placeholder=" 나이를 입력하세요..." />
+            <input id="insertStudentAge" type="number" placeholder=" 나이를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 명 </label>
+            <select class="selectCurriculumName" name="insertCurriculumName" id="insertCurriculumName">
+              <option>과정을 선택해주세요.</option>
+            </select>
           </div>
           <div class="input-box">
             <label>연락처 : </label>
-            <input id="i_studentPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
+            <input id="insertStudentPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
           </div>
           <div class="input-box">
             <label>주소 </label>
-            <input id="i_adress" type="text" placeholder=" 주소를 입력하세요..." />
+            <input id="insertAddress" type="text" placeholder=" 주소를 입력하세요..." />
             <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
           </div>
           <div class="btn-area">
-            <a href="#" class="btn-cancel" onclick="">등록 취소</a>
+            <a href="#" class="btn-cancel" onclick="cancel()">등록 취소</a>
             <a href="#" class="btn-success" onclick="addStudent()">학생 등록</a>
           </div>
         </div>
@@ -43,28 +49,35 @@
           </div>
           <div class="input-box">
             <label>학생 번호 : </label>
-            <input id="uCurriculumNum" type="number" readonly />
+            <input id="reviseStudentNum" type="number" readonly />
           </div>
           <div class="input-box">
             <label>학생 이름 : </label>
-            <input id="uCurriculumName" type="text" />
+            <input id="reviseStudentName" type="text" />
           </div>
           <div class="input-box">
             <label>학생 나이 : </label>
-            <input id="uCurriculumAge" type="number" placeholder=" 나이를 입력하세요..." />
+            <input id="reviseStudentAge" type="number" placeholder=" 나이를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 명 </label>
+            <select class="selectCurriculumName" name="reviseCurriculumName" id="reviseCurriculumName">
+              <option>과정을 선택해주세요.</option>
+            </select>
           </div>
           <div class="input-box">
             <label>연락처 : </label>
-            <input id="uCurriculumPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
+            <input id="reviseStudentPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
           </div>
           <div class="input-box">
             <label>주소 </label>
-            <input id="uCurriculumAddress" type="text" placeholder=" 주소를 입력하세요..." />
+            <input id="reviseAddress" type="text" placeholder=" 주소를 입력하세요..." />
             <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
           </div>
+
           <div class="btn-area">
-            <a href="#" class="btn-update" onclick="">수정</a>
-            <a href="#" class="btn-delete" onclick="">삭제</a>
+            <a href="#" class="btn-update" onclick="doUpdate()">수정</a>
+            <a href="#" class="btn-delete" onclick="doDelete()">삭제</a>
           </div>
         </div>
       </div>
@@ -186,6 +199,7 @@
   <script>
     $('#empAdd').click(function () {
       $('.write-popup').css('display', 'block');
+      selectCurriculum();
     });
     $('.btn-cancel').click(function () {
       $('.write-popup').css('display', 'none');
@@ -203,73 +217,134 @@
     list.forEach((item) => {
       item.addEventListener('mouseover', activeLink);
     });
-    function getData() {
+    //상세조회
+    function getData(studentNum) {
+      selectCurriculum();
       $('.update-popup').css('display', 'block');
       $.ajax({
         url: '/api/v1/student/' + studentNum,
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-          $('#uCurriculumNum').val(response.curriculumNum);
-          $('#uCurriculumName').val(response.curriculumName);
-          $('#uCurriculumRoom').val(response.curriculumRoom);
-          $('#uCurriculumStartPeriod').val(response.curriculumStartPeriod);
-          $('#uCurriculumEndPeriod').val(response.curriculumEndPeriod);
-          $('#uCurriculumTeacher').val(response.curriculumTeacher);
+          $('#reviseStudentNum').val(response.studentNum);
+          $('#reviseStudentName').val(response.studentName);
+          $('#reviseStudentAge').val(response.studentAge);
+          $('#reviseStudentPhone').val(response.studentPhone);
+          $('#reviseAddress').val(response.address);
+          $('#reviseCurriculumName').val(response.curriculum.curriculumName);
         },
       });
     }
     // 학생목록 불러오기
-    function doSubmit() {
-      studentsCnt = 0;
-      boardCnt = 0;
+    $.ajax({
+      url: '/api/v1/student',
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        var avg = 0;
+        var cnt = 0;
+        for (var i = 0; i < response.length; i++) {
+          tr = $('<tr onclick="getData(' + response[i].studentNum + ')"></tr>');
+          studentNum = $('<td>' + response[i].studentNum + '</td>');
+          studentName = $('<td>' + response[i].studentName + '</td>');
+          studentAge = $('<td>' + response[i].studentAge + '</td>');
+          avg += response[i].studentAge;
+          cnt++;
+          console.log(response);
+          studentPhone = $(
+            '<td>' +
+              response[i].studentPhone.substring(0, 3) +
+              '-' +
+              response[i].studentPhone.substring(3, 7) +
+              '-' +
+              //'response[i].studentPhone.substring(7, 11).replace(/[0-9]/g, '*')'
+              '****' +
+              '</td>',
+          );
+          address = $('<td>' + response[i].address + '</td>');
+          curriculumName = $('<td>' + response[i].curriculum.curriculumName + '</td>');
+          tr.append(studentNum);
+          tr.append($('<td>' + response[i].studentName + '</td>'));
+          tr.append(studentAge);
+          tr.append(studentPhone);
+          tr.append(address);
+          tr.append(curriculumName);
+          $('#data').append(tr);
+        }
+
+        $('#studentsCnt').text(cnt);
+        $('#boardCnt').text(parseInt(avg / cnt));
+        console.log(avg / cnt);
+      },
+    });
+
+    //과정목록 선택
+    function selectCurriculum() {
       $.ajax({
-        url: 'api/v1/student',
-        contentType: 'application/json', //서버에 json타입으로 보낼 예정(요청)
+        url: 'api/v1/student/select',
+        contentType: 'application/json',
         type: 'GET',
         dataType: 'json',
         success: function (response) {
           console.log(response);
-          var tbody = '';
+          var curriculumOption = '';
+          var getNum = 0;
           for (var i in response) {
-            tbody +=
-              "<tr onclick='getData(" +
-              response[i].studentNum +
-              ")'><td>" +
-              response[i].studentNum +
-              '</td><td>' +
-              response[i].studentName +
-              '</td><td>' +
-              response[i].studentAge +
-              '</td><td>' +
-              response[i].studentPhone +
-              '</td><td>' +
-              response[i].address +
-              '</td><td>' +
-              response[i].curriculum.curriculumName +
-              '</td></tr>';
-            studentsCnt += 1;
-            boardCnt += response[i].studentAge;
+            curriculumOption += '<option value = "' + response[i].curriculumNum + '">' + response[i].curriculumName + '</option>';
           }
-          boardCnt = boardCnt / studentsCnt;
-          $('#data').append(tbody);
-          $('#studentsCnt').append(studentsCnt);
-          $('#boardCnt').append(boardCnt);
+          $('.selectCurriculumName').append(curriculumOption);
         },
       });
     }
-    doSubmit();
+
+    //수정
+    //UPDATE == INSERT
+    function doUpdate() {
+      var studentNum = $('#reviseStudentNum').val();
+      var studentName = $('#reviseStudentName').val();
+      var studentAge = $('#reviseStudentAge').val();
+      var curriculumNum = $('#reviseCurriculumName').val();
+      var studentPhone = $('#reviseStudentPhone').val();
+      var address = $('#reviseAddress').val();
+
+      var jsonData = {
+        studentNum: studentNum,
+        studentName: studentName,
+        studentAge: studentAge,
+        curriculum: {
+          curriculumNum: curriculumNum,
+        },
+        studentPhone: studentPhone,
+        address: address,
+      };
+
+      $.ajax({
+        url: '/api/v1/student',
+        type: 'PATCH',
+        contentType: 'application/json', //서버에 json 타입으로 보낼 예정(요청)
+        data: JSON.stringify(jsonData),
+        dataType: 'json',
+        success: function (response) {
+          alert('학생정보 수정 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
 
     // 학생추가
     function addStudent() {
-      var studentName = $('#i_studentName').val();
-      var studentAge = $('#i_studentAge').val();
-      var studentPhone = $('#i_studentPhone').val();
-      var address = $('#i_adress').val();
+      var studentName = $('#insertStudentName').val();
+      var studentAge = $('#insertStudentAge').val();
+      var curriculumNum = $('#insertCurriculumName').val();
+      var studentPhone = $('#insertStudentPhone').val();
+      var address = $('#insertAddress').val();
 
       var jsonData = {
         studentName: studentName,
         studentAge: studentAge,
+        curriculum: {
+          curriculumNum: curriculumNum,
+        },
         studentPhone: studentPhone,
         address: address,
       };
@@ -289,22 +364,24 @@
       });
     }
 
-    // //학생 상세조회
-    // function getData(studentNum) {
-    //   $.ajax({
-    //     url: '/api/v1/student/' + studentNum,
-    //     type: 'GET',
-    //     dataType: 'json',
-    //     success: function (response) {
-    //       $('#studentNum').val(response.studentNum);
-    //       $('#studentName').val(response.studentName);
-    //       $('#studentAge').val(response.studentAge);
-    //       $('#studentPhone').val(response.studentPhone);
-    //       $('#address').val(response.address);
-    //     },
-    //   });
-    // }
+    //학생 삭제
+    function doDelete() {
+      var num = $('#reviseStudentNum').val(); //input 데이터 가져오기
 
+      //사원 삭제 ajax 연결하기
+      $.ajax({
+        url: '/api/v1/student/' + num,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function (response) {
+          alert('학생 삭제 완료!');
+          location.reload(); //새로고침
+        },
+      });
+    }
+    function cancel() {
+      alert('취소되었습니다.');
+    }
     //도로명 주소 함수
     function getPostCode() {
       new daum.Postcode({
@@ -330,6 +407,8 @@
           if (fullRoadAddr !== '') {
             fullRoadAddr += extraRoadAddr;
           }
+          $('#insertAddress').val(fullRoadAddr);
+          $('#reviseAddress').val(fullRoadAddr);
         },
       }).open();
     }

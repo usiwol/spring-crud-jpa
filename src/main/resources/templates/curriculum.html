@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRUD! 😛</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <div class="container">
@@ -14,24 +14,24 @@
         <div class="editor">
           <div class="input-box">
             <label>과정 번호 : </label>
-            <input id="i_curriculumNum" type="number" placeholder="과정번호를 입력하세요..." />
+            <input id="insertCurriculumNum" type="number" placeholder="과정번호를 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 명 : </label>
-            <input id="i_curriculumName" type="text" placeholder="과정명을 입력하세요..." />
+            <input id="insertCurriculumName" type="text" placeholder="과정명을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 호실 : </label>
-            <input id="i_curriculumRoom" type="text" placeholder="과정호실을 입력하세요..." />
+            <input id="insertCurriculumRoom" type="text" placeholder="과정호실을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 기간 : </label>
-            <input id="i_curriculumStartPeriod" type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
-            <input id="i_curriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+            <input id="insertCurriculumStartPeriod" type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
+            <input id="insertCurriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
           </div>
           <div class="input-box">
             <label>담당 교사 : </label>
-            <input id="i_curriculumTeacher" type="text" placeholder="교사이름 입력하세요..." />
+            <input id="insertCurriculumTeacher" type="text" placeholder="교사이름 입력하세요..." />
           </div>
           <div class="btn-area">
             <a href="#" class="btn-cancel" onclick="">취소</a>
@@ -47,24 +47,24 @@
           </div>
           <div class="input-box">
             <label>과정 번호 : </label>
-            <input id="u_curriculumNum" type="number" value="9983" placeholder="과정번호를 입력하세요..." readonly />
+            <input id="reviseCurriculumNum" type="number" value="9983" placeholder="과정번호를 입력하세요..." readonly />
           </div>
           <div class="input-box">
             <label>과정 명 : </label>
-            <input id="u_curriculumName" type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." readonly />
+            <input id="reviseCurriculumName" type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." readonly />
           </div>
           <div class="input-box">
             <label>과정 호실 : </label>
-            <input id="u_curriculumRoom" type="text" value="501호" placeholder="과정호실을 입력하세요..." />
+            <input id="reviseCurriculumRoom" type="text" value="501호" placeholder="과정호실을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 기간 : </label>
-            <input id="u_curriculumStartPeriod" type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
-            <input id="u_curriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+            <input id="reviseCurriculumStartPeriod" type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
+            <input id="reviseCurriculumEndPeriod" type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
           </div>
           <div class="input-box">
             <label>담당 교사 : </label>
-            <input id="u_curriculumTeacher" type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
+            <input id="reviseCurriculumTeacher" type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
           </div>
           <div class="btn-area">
             <a href="#" class="btn-update" onclick="doUpdate()">수정</a>
@@ -81,13 +81,13 @@
             </a>
           </li>
           <li>
-            <a href="./index.html">
+            <a href="./student">
               <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
               <span class="title">학생 목록</span>
             </a>
           </li>
           <li>
-            <a href="./dept.html">
+            <a href="./curriculum">
               <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
               <span class="title">과정 목록</span>
             </a>
@@ -185,12 +185,12 @@
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-          $('#u_curriculumNum').val(response.curriculumNum);
-          $('#u_curriculumName').val(response.curriculumName);
-          $('#u_curriculumRoom').val(response.curriculumRoom);
-          $('#u_curriculumStartPeriod').val(response.curriculumStartPeriod);
-          $('#u_curriculumEndPeriod').val(response.curriculumEndPeriod);
-          $('#u_curriculumTeacher').val(response.curriculumTeacher);
+          $('#reviseCurriculumNum').val(response.curriculumNum);
+          $('#reviseCurriculumName').val(response.curriculumName);
+          $('#reviseCurriculumRoom').val(response.curriculumRoom);
+          $('#reviseCurriculumStartPeriod').val(response.curriculumStartPeriod);
+          $('#reviseCurriculumEndPeriod').val(response.curriculumEndPeriod);
+          $('#reviseCurriculumTeacher').val(response.curriculumTeacher);
         },
       });
     }
@@ -233,12 +233,12 @@
 
     //과정 추가
     function addCurriculum() {
-      var number = $('#i_curriculumNum').val();
-      var name = $('#i_curriculumName').val();
-      var room = $('#i_curriculumRoom').val();
-      var startPeriod = $('#i_curriculumStartPeriod').val();
-      var endPeriod = $('#i_curriculumEndPeriod').val();
-      var teacher = $('#i_curriculumTeacher').val();
+      var number = $('#insertCurriculumNum').val();
+      var name = $('#insertCurriculumName').val();
+      var room = $('#insertCurriculumRoom').val();
+      var startPeriod = $('#insertCurriculumStartPeriod').val();
+      var endPeriod = $('#insertCurriculumEndPeriod').val();
+      var teacher = $('#insertCurriculumTeacher').val();
 
       var jsonData = {
         curriculumNum: number,
@@ -267,12 +267,12 @@
     //수정
     //UPDATE == INSERT
     function doUpdate() {
-      var number = $('#u_curriculumNum').val();
-      var name = $('#u_curriculumName').val();
-      var room = $('#u_curriculumRoom').val();
-      var startPeriod = $('#u_curriculumStartPeriod').val();
-      var endPeriod = $('#u_curriculumEndPeriod').val();
-      var teacher = $('#u_curriculumTeacher').val();
+      var number = $('#reviseCurriculumNum').val();
+      var name = $('#reviseCurriculumName').val();
+      var room = $('#reviseCurriculumRoom').val();
+      var startPeriod = $('#reviseCurriculumStartPeriod').val();
+      var endPeriod = $('#reviseCurriculumEndPeriod').val();
+      var teacher = $('#reviseCurriculumTeacher').val();
 
       var jsonData = {
         curriculumNum: number,
@@ -298,7 +298,7 @@
 
     //과정삭제
     function doDelete() {
-      var num = $('#u_curriculumNum').val(); //input 데이터 가져오기
+      var num = $('#reviseCurriculumNum').val(); //input 데이터 가져오기
 
       //사원 삭제 ajax 연결하기
       $.ajax({

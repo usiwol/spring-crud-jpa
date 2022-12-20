@@ -15,7 +15,7 @@ import lombok.Setter;
 public class Curriculum {
 
     @Id
-    @Column
+    @Column(name="curriculum_num")
     private long curriculumNum; //과정번호(pk)
     @Column
     private String curriculumName; //과정이름
