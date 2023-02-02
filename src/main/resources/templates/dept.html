@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRUD! 😛</title>
-    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
     <div class="container">
@@ -14,28 +14,28 @@
         <div class="editor">
           <div class="input-box">
             <label>과정 번호 : </label>
-            <input type="number" placeholder="과정번호를 입력하세요..." />
+            <input id="addProcessNumber" type="number" placeholder="과정번호를 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 명 : </label>
-            <input type="text" placeholder="과정명을 입력하세요..." />
+            <input id="addProcessName" type="text" placeholder="과정명을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 호실 : </label>
-            <input type="text" placeholder="과정호실을 입력하세요..." />
+            <input id="addProcessClass" type="text" placeholder="과정호실을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 기간 : </label>
-            <input type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
-            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+            <input id="addProcessPeriod-1" type="date" placeholder="과정 시작 날짜입력..." />
+            <input id="addProcessPeriod-2" type="date" placeholder="과정 종료 날짜입력..." />
           </div>
           <div class="input-box">
             <label>담당 교사 : </label>
-            <input type="text" placeholder="교사이름 입력하세요..." />
+            <input id="addProcessTeacher" type="text" placeholder="교사이름 입력하세요..." />
           </div>
           <div class="btn-area">
             <a href="#" class="btn-cancel" onclick="">취소</a>
-            <a href="#" class="btn-success" onclick="">등록</a>
+            <a href="#" class="btn-success" onclick="doAdd()">등록</a>
           </div>
         </div>
       </div>
@@ -47,28 +47,28 @@
           </div>
           <div class="input-box">
             <label>과정 번호 : </label>
-            <input type="number" value="9983" placeholder="과정번호를 입력하세요..." />
+            <input id="processNumber" type="number" value="9983" placeholder="과정번호를 입력하세요..." readonly />
           </div>
           <div class="input-box">
             <label>과정 명 : </label>
-            <input type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." />
+            <input id="processName" type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 호실 : </label>
-            <input type="text" value="501호" placeholder="과정호실을 입력하세요..." />
+            <input id="processClass" type="text" value="501호" placeholder="과정호실을 입력하세요..." />
           </div>
           <div class="input-box">
             <label>과정 기간 : </label>
-            <input type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
-            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+            <input id="processPeriod-1" type="date" placeholder="과정 시작 날짜입력..." />
+            <input id="processPeriod-2" type="date" placeholder="과정 종료 날짜입력..." />
           </div>
           <div class="input-box">
             <label>담당 교사 : </label>
-            <input type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
+            <input id="processTeacher" type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
           </div>
           <div class="btn-area">
-            <a href="#" class="btn-update" onclick="">수정</a>
-            <a href="#" class="btn-delete" onclick="">삭제</a>
+            <a href="#" class="btn-update" onclick="doUpdate()">수정</a>
+            <a href="#" class="btn-delete" onclick="doDelete()">삭제</a>
           </div>
         </div>
       </div>
@@ -81,13 +81,13 @@
             </a>
           </li>
           <li>
-            <a href="./index.html">
+            <a th:href="@{/index}">
               <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
               <span class="title">학생 목록</span>
             </a>
           </li>
           <li>
-            <a href="./dept.html">
+            <a th:href="@{/dept}">
               <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
               <span class="title">과정 목록</span>
             </a>
@@ -110,7 +110,7 @@
             <h2>과정 목록</h2>
             <a href="#" onclick="addSubject()" class="btn">과정 추가</a>
           </div>
-          <table>
+          <table id="table">
             <thead>
               <tr>
                 <th>과정 번호</th>
@@ -120,22 +120,7 @@
                 <th>담당 교사</th>
               </tr>
             </thead>
-            <tbody id="data">
-              <tr onclick="getSubject()">
-                <td>18990</td>
-                <td>주짓수 개발자 양성 과정</td>
-                <td>501호</td>
-                <td>22.06.15 ~ 22.12.22</td>
-                <td>이정수</td>
-              </tr>
-              <tr onclick="getSubject()">
-                <td>18330</td>
-                <td>React.js 개발자 양성 과정</td>
-                <td>502호</td>
-                <td>22.12.07 ~ 23.05.01</td>
-                <td>이예진</td>
-              </tr>
-            </tbody>
+            <tbody id="data"></tbody>
           </table>
           <!-- 페이징 처리하는 HTML -->
           <div class="pagination">
@@ -161,6 +146,113 @@
     crossorigin="anonymous"
   ></script>
   <script>
+    var table = '';
+    $.ajax({
+      url: '/process',
+      type: 'GET',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: function (response) {
+        console.log(response);
+        for (var i = 0; i < response.length; i++) {
+          table +=
+            '<tr onclick="getSubject(' +
+            response[i].processNumber +
+            ')"><td>' +
+            response[i].processNumber +
+            '</td><td>' +
+            response[i].processName +
+            '</td><td>' +
+            response[i].processClass +
+            '</td><td>' +
+            response[i].processPeriod +
+            '</td><td>' +
+            response[i].processTeacher +
+            '</td></tr>';
+        }
+        $('#table').append(table);
+      },
+    });
+
+    // 과정 추가
+    function doAdd() {
+      var num = $('#addProcessNumber').val();
+      var name = $('#addProcessName').val();
+      var processClass = $('#addProcessClass').val();
+      var period = $('#addProcessPeriod-1').val() + '~' + $('#addProcessPeriod-2').val();
+      var teacher = $('#addProcessTeacher').val();
+
+      var data = {
+        processNumber: num,
+        processName: name,
+        processClass: processClass,
+        processPeriod: period,
+        processTeacher: teacher,
+      };
+
+      $.ajax({
+        url: '/process',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: function (response) {
+          if (response) {
+            alert('과정 추가 완료');
+            location.reload();
+          } else {
+            alert('과정 추가 실패');
+            return false;
+          }
+        },
+      });
+    }
+
+    // 과정 삭제
+    function doDelete() {
+      var id = $('#processNumber').val();
+      $.ajax({
+        url: '/process/' + id,
+        type: 'DELETE',
+        dataType: 'json',
+        success: function (response) {
+          alert('삭제 성공');
+          console.log(response);
+          location.reload();
+        },
+      });
+    }
+
+    // 과정 업데이트
+    function doUpdate() {
+      var num = $('#processNumber').val();
+      var name = $('#processName').val();
+      var processClass = $('#processClass').val();
+      var period = $('#processPeriod-1').val() + '~' + $('#processPeriod-2').val();
+      var teacher = $('#processTeacher').val();
+
+      var jsonData = {
+        processNumber: num,
+        processName: name,
+        processClass: processClass,
+        processPeriod: period,
+        processTeacher: teacher,
+      };
+
+      $.ajax({
+        url: '/process',
+        type: 'PATCH',
+        contentType: 'application/json', //서버에 json 타입으로 보낼 예정(요청)
+        data: JSON.stringify(jsonData),
+        dataType: 'json',
+        success: function (response) {
+          console.log(response);
+          alert('과정 정보 수정 완료');
+          location.reload(); //강제 새로고침
+        },
+      });
+    }
+
     $('.btn-cancel').click(function () {
       $('.write-popup').css('display', 'none');
     });
@@ -178,17 +270,30 @@
       item.addEventListener('mouseover', activeLink);
     });
 
-    function getSubject() {
+    function getSubject(processNumber) {
       $('.update-popup').css('display', 'block');
+
+      $.ajax({
+        url: '/process/' + processNumber,
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+          $('#processNumber').val(response.processNumber);
+          $('#processName').val(response.processName);
+          $('#processClass').val(response.processClass);
+          var date = response.processPeriod.split('~');
+
+          console.log(date[0]);
+          $('#processPeriod-1').val(date[0]);
+          $('#processPeriod-2').val(date[1]);
+          $('#processTeacher').val(response.processTeacher);
+        },
+      });
     }
 
     function addSubject() {
       $('.write-popup').css('display', 'block');
     }
   </script>
-  <script
-    src="https://code.jquery.com/jquery-3.6.1.js"
-    integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
-    crossorigin="anonymous"
-  ></script>
 </html>

@@ -5,14 +5,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
-    
-    @GetMapping("/student")
-    public String loadStudentPage() {
-        return "student";
-    }
-@GetMapping("/curriculum")
-    public String loadCurriculumPage() {
-        return "curriculum";
-    }
-    
+
+  @GetMapping("/index")
+  public String callMainPage() {
+    return "index";
+  }
+
+  @GetMapping("/dept")
+  public String callDeptPage() {
+    return "dept";
+  }
+
 }
